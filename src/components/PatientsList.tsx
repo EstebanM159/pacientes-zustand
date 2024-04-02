@@ -2,7 +2,6 @@ import { usePatientStore } from '../store'
 import PatientDetails from './PatientDetails'
 export default function PatientsList () {
   const patients = usePatientStore(state => state.patients)
-  console.log(patients)
   return (
     <div className='md:w-1/2 lg:3/5 md:h-screen overflow-y-scroll' >
       {patients.length > 0

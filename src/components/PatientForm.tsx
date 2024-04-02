@@ -1,28 +1,30 @@
-/* eslint-disable */
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import Error from './Error'
 import type { DraftPatient } from '../types'
 import { usePatientStore } from '../store'
 import { useEffect } from 'react'
 export default function PatientForm () {
-  const {addPatient, activeId, patients, updatePatient} = usePatientStore()
-  const { register, handleSubmit, formState:{errors},reset, setValue } = useForm<DraftPatient>()
-  useEffect(()=>{
-    if(activeId){
-      const activePatient = patients.filter(patient=>patient.id=== activeId)[0]
-      setValue('name',activePatient.name)
-      setValue('caretaker',activePatient.caretaker)
-      setValue('date',activePatient.date)
-      setValue('email',activePatient.email)
-      setValue('symptoms',activePatient.symptoms)
+  const { addPatient, activeId, patients, updatePatient } = usePatientStore()
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<DraftPatient>()
+  useEffect(() => {
+    if (activeId) {
+      const activePatient = patients.filter(patient => patient.id === activeId)[0]
+      setValue('name', activePatient.name)
+      setValue('caretaker', activePatient.caretaker)
+      setValue('date', activePatient.date)
+      setValue('email', activePatient.email)
+      setValue('symptoms', activePatient.symptoms)
     }
   },
   [activeId])
-  const registerPatient = (data:DraftPatient) => {
-    if(activeId){
+  const registerPatient = (data: DraftPatient) => {
+    if (activeId) {
       updatePatient(data)
-    }else{
+      toast.success('Paciente actualizado correctamente')
+    } else {
       addPatient(data)
+      toast.success('Paciente registrado correctamente')
     }
     reset()
   }
@@ -47,6 +49,7 @@ export default function PatientForm () {
                   <input
                       id="name"
                       className="w-full p-3  border border-gray-100"
+                      autoComplete='none'
                       type="text"
                       placeholder="Nombre del Paciente"
                       {...register('name', {
@@ -54,7 +57,7 @@ export default function PatientForm () {
                       })}
                       />
                       {errors.name && (
-                        <Error >{errors.name?.message?.toString()}</Error>
+                        <Error>{errors.name?.message?.toString()}</Error>
                       )}
               </div>
 
@@ -68,8 +71,8 @@ export default function PatientForm () {
                     type="text"
                     placeholder="Nombre del Propietario"
                     {...register('caretaker', {
-                        required: 'El nombre del propietario es obligatorio'
-                      })}
+                      required: 'El nombre del propietario es obligatorio'
+                    })}
                       />
                       {errors.caretaker && (
                         <Error >{errors.caretaker?.message?.toString()}</Error>
@@ -85,17 +88,17 @@ export default function PatientForm () {
                   className="w-full p-3  border border-gray-100"
                   type="email"
                   placeholder="Email de Registro"
-                  {...register("email", {
-                    required: "El Email es Obligatorio",
+                  {...register('email', {
+                    required: 'El Email es Obligatorio',
                     pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Email No Válido'
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Email No Válido'
                     }
                   })}
                   />
                    {errors.email && (
                         <Error >{errors.email?.message?.toString()}</Error>
-                      )}
+                   )}
             </div>
 
             <div className="mb-5">
@@ -107,8 +110,8 @@ export default function PatientForm () {
                     className="w-full p-3  border border-gray-100"
                     type="date"
                     {...register('date', {
-                        required: 'La fecha de alta es obligatoria'
-                      })}
+                      required: 'La fecha de alta es obligatoria'
+                    })}
                       />
                       {errors.date && (
                         <Error >{errors.date?.message?.toString()}</Error>
@@ -124,8 +127,8 @@ export default function PatientForm () {
                     className="w-full p-3  border border-gray-100 resize-none"
                     placeholder="Síntomas del paciente"
                     {...register('symptoms', {
-                        required: 'Los sintomas son obligatorios'
-                      })}
+                      required: 'Los sintomas son obligatorios'
+                    })}
                       ></textarea>
                       {errors.symptoms && (
                         <Error >{errors.symptoms?.message?.toString()}</Error>
